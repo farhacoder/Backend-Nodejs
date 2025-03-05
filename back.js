@@ -37,4 +37,20 @@ app.put("/", function(req,res){
     }
     res.json({})
 })
+//removing all the unhealthy Kidney
+app.delete("/", function(req,res){
+    const newKidney=[]
+    for(let i=0;i<users[0].kidney.length;i++){
+       if(users[0].kidney[i].healthy){
+        newKidney.push({
+            healthy:true
+        })
+       }
+      
+    }
+    users[0].kidney=newKidney
+    res.json({msg:"done"})
+})
+
+
 app.listen(3000)
