@@ -1,56 +1,23 @@
-const express=require("express")
-const app=express()
-var users=[{
-    name:"john",
-    kidney:[{healthy:false},
-    ]
-}]
+const express = require("express");
+const app = express();
 
-app.use(express.json());
+app.get("/health-checkup", function (req, res) {
+  const kidneyId = req.query.kidneyId;
+  const username = req.headers.username;
+  const password = req.headers.password;
+  if (username != "farha" && password != "pass") {
+    res.status(400).json({
+      msg: "user doest not exit",
+    });
+    return;
+  }
+  if (kidneyId != 1 && kidneyId != 2) {
+    res.status(400).json({
+      msg: "wrong input",
+    });
+    return;
+  }
+  res.json({ msg: "you are okay" });
+});
 
-app.get("/",function(req,res){
-    const johnKidneys=users[0].kidney
-    const noOfKindneys=johnKidneys.length
-    let noOfHealthyKidney=0
-    for(let i=0 ;i<johnKidneys.length;i++)
-        {
-            if(johnKidneys[i].healthy){
-                noOfHealthyKidney+=1
-            }
-        }
-    const unHealthyKidney=noOfKindneys-noOfHealthyKidney
-    res.json({noOfKindneys,noOfHealthyKidney,unHealthyKidney})
-})
-app.post("/",function(req,res){
-    const isHealthy=req.body.isHealthy
-    users[0].kidney.push({
-        healthy:isHealthy
-    })
-    res.json({
-        msg:"done"
-    })
-})
-
-app.put("/", function(req,res){
-    for(let i=0;i<users[0].kidney.length;i++){
-        users[0].kidney[i].healthy=true
-    }
-    res.json({})
-})
-//removing all the unhealthy Kidney
-app.delete("/", function(req,res){
-    const newKidney=[]
-    for(let i=0;i<users[0].kidney.length;i++){
-       if(users[0].kidney[i].healthy){
-        newKidney.push({
-            healthy:true
-        })
-       }
-      
-    }
-    users[0].kidney=newKidney
-    res.json({msg:"done"})
-})
-
-
-app.listen(3000)
+app.listen(3000);
